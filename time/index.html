@@ -1,26 +1,13 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-
-<script>
-    // Thiết lập mật khẩu của bạn ở đây
-    const SECRET_KEY = "five68"; 
-
-    // Kiểm tra mã trên đường link (Ví dụ: .../index.html?key=five68)
-    const urlParams = new URLSearchParams(window.location.search);
-    const userKey = urlParams.get('key');
-
-    if (userKey !== SECRET_KEY) {
-        document.body.innerHTML = "<h1>403 Forbidden: Sai mã truy cập!</h1>";
-        window.stop(); // Dừng tải trang
-    }
-</script>
-
+    <title>Live Score Control</title>
     <style>
+        /* QUAN TRỌNG: Ẩn toàn bộ body ngay từ đầu */
         body { 
-            background: transparent; 
+            display: none; 
+            background: #000; /* Nền đen để không bị chói khi chưa load xong */
             color: #ffffff; 
             font-family: 'Segoe UI', Roboto, Arial, sans-serif; 
             text-align: center; 
@@ -28,6 +15,7 @@
             padding: 20px;
             overflow: hidden;
         }
+
         /* GIAO DIỆN SCOREBOARD */
         .scoreboard {
             display: inline-flex;
@@ -66,7 +54,7 @@
         .timer { font-size: 34px; font-weight: bold; font-variant-numeric: tabular-nums; color: #f1c40f; }
         .period-display { font-size: 14px; color: #00ff00; font-weight: bold; text-transform: uppercase; display: block; margin-bottom: -5px; }
 
-        /* BẢNG ĐIỀU KHIỂN (INTERACT) */
+        /* BẢNG ĐIỀU KHIỂN */
         .controls { 
             margin-top: 30px; 
             background: #2c2c2c; 
@@ -95,6 +83,7 @@
 </head>
 <body>
 
+    <!-- Nội dung của bạn -->
     <div class="scoreboard">
         <div class="team-name home-side" id="display-home-name">AME</div>
         <div class="team-score" id="home-score">0</div>
@@ -121,7 +110,7 @@
                 </div>
             </div>
             
-            <label>Select Period (Click to change)</label>
+            <label>Select Period</label>
             <button class="btn-period" onclick="setPeriod('1ST')">1st Half</button>
             <button class="btn-period" onclick="setPeriod('HT')">HT</button>
             <button class="btn-period" onclick="setPeriod('2ND')">2nd Half</button>
@@ -151,6 +140,26 @@
     </div>
 
     <script>
+        // --- PHẦN KIỂM TRA KEY ---
+        const SECRET_KEY = "fi6688"; 
+        const urlParams = new URLSearchParams(window.location.search);
+        const userKey = urlParams.get('key');
+
+        if (userKey === SECRET_KEY) {
+            // Nếu đúng key, hiển thị body
+            document.body.style.display = "block";
+        } else {
+            // Nếu sai key, thay thế toàn bộ nội dung và hiển thị thông báo lỗi
+            document.documentElement.innerHTML = `
+                <body style="background: #000; color: #ff4d4d; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif;">
+                    <div style="text-align: center; border: 2px solid #ff4d4d; padding: 40px; border-radius: 10px;">
+                        <h1 style="font-size: 50px; margin: 0;">403</h1>
+                        <p style="font-size: 20px;">Forbidden: Sai mã truy cập!</p>
+                    </div>
+                </body>`;
+        }
+
+        // --- PHẦN LOGIC SCOREBOARD (Giữ nguyên của bạn) ---
         let seconds = 0;
         let timerInterval;
         let scores = { home: 0, away: 0 };
